@@ -1,6 +1,6 @@
 #!/bin/bash
 # Скрипт запуска бота для Render
 cd "$(dirname "$0")"
-cd src
-python3 main.py
+export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+python3 src/main.py
 
