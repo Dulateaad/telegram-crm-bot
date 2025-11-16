@@ -16,24 +16,39 @@ if not firebase_admin._apps:
     if firebase_creds_json:
         # Читаем credentials из переменной окружения
         try:
+            print("📝 Загрузка Firebase credentials из переменной окружения...")
             cred_dict = json.loads(firebase_creds_json)
             cred = credentials.Certificate(cred_dict)
             firebase_admin.initialize_app(cred, {
                 'projectId': FIREBASE_PROJECT_ID,
             })
+            print("✅ Firebase credentials загружены из переменной окружения")
         except json.JSONDecodeError as e:
-            print(f"Ошибка парсинга FIREBASE_CREDENTIALS_JSON: {e}")
+            print(f"❌ Ошибка парсинга FIREBASE_CREDENTIALS_JSON: {e}")
+            print(f"Первые 100 символов: {firebase_creds_json[:100]}")
+            raise
+        except Exception as e:
+            print(f"❌ Ошибка инициализации Firebase: {e}")
             raise
     elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
         # Читаем credentials из файла (для локальной разработки)
+        print(f"📝 Загрузка Firebase credentials из файла: {FIREBASE_CREDENTIALS_PATH}")
         cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
         firebase_admin.initialize_app(cred, {
             'projectId': FIREBASE_PROJECT_ID,
         })
+        print("✅ Firebase credentials загружены из файла")
     else:
         # Для разработки можно использовать Application Default Credentials
-        print("⚠️ Firebase credentials не найдены. Используются Application Default Credentials.")
-        firebase_admin.initialize_app()
+        print("⚠️ Firebase credentials не найдены.")
+        print(f"   Проверьте переменную окружения FIREBASE_CREDENTIALS_JSON или файл {FIREBASE_CREDENTIALS_PATH}")
+        print("   Пытаемся использовать Application Default Credentials...")
+        try:
+            firebase_admin.initialize_app()
+            print("✅ Используются Application Default Credentials")
+        except Exception as e:
+            print(f"❌ Не удалось инициализировать Firebase: {e}")
+            raise
 
 db = firestore.client()
 

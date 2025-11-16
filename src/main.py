@@ -7,9 +7,19 @@ import os
 
 # Добавляем корневую директорию проекта в путь для импортов
 # Определяем корневую директорию проекта (на уровень выше src/)
-project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+current_file = os.path.abspath(__file__)
+src_dir = os.path.dirname(current_file)
+project_root = os.path.dirname(src_dir)
+
+# Добавляем корневую директорию в начало пути
 if project_root not in sys.path:
     sys.path.insert(0, project_root)
+
+# Для отладки
+print(f"🔍 Текущий файл: {current_file}")
+print(f"🔍 Директория src: {src_dir}")
+print(f"🔍 Корневая директория проекта: {project_root}")
+print(f"🔍 PYTHONPATH: {sys.path[:3]}")
 
 from src.bot import start_bot
 
