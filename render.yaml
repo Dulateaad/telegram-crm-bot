@@ -1,0 +1,28 @@
+services:
+  - type: worker
+    name: telegram-crm-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 src/main.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        value: studio-3898272712-a12a4
+      - key: FIREBASE_CREDENTIALS_PATH
+        value: ./firebase-credentials.json
+      - key: WEB_APP_URL
+        value: https://studio--studio-3898272712-a12a4.us-central1.hosted.app
+      - key: SCHEDULE_MOVE_TO_TODAY
+        value: 07:30
+      - key: SCHEDULE_MORNING_REPORT
+        value: 09:00
+      - key: SCHEDULE_DAY_REPORT
+        value: 20:00
+      - key: SCHEDULE_SLA_CHECK
+        value: "*/10"
+      - key: SLA_NO_ANSWER_RETRY
+        value: 30
+      - key: SLA_BAD_NUMBER_ESCALATION
+        value: 60
+

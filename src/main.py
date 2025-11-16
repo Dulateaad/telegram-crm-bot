@@ -2,6 +2,12 @@
 """Главный файл для запуска бота"""
 import asyncio
 import logging
+import sys
+import os
+
+# Добавляем корневую директорию в путь для импортов
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.bot import start_bot
 
 # Настройка логирования

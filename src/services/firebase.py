@@ -10,13 +10,29 @@ from src.config import FIREBASE_PROJECT_ID, FIREBASE_CREDENTIALS_PATH
 
 # Инициализация Firebase Admin SDK
 if not firebase_admin._apps:
-    if os.path.exists(FIREBASE_CREDENTIALS_PATH):
+    # Проверяем, есть ли credentials в переменной окружения (для Render)
+    firebase_creds_json = os.getenv('FIREBASE_CREDENTIALS_JSON')
+    
+    if firebase_creds_json:
+        # Читаем credentials из переменной окружения
+        try:
+            cred_dict = json.loads(firebase_creds_json)
+            cred = credentials.Certificate(cred_dict)
+            firebase_admin.initialize_app(cred, {
+                'projectId': FIREBASE_PROJECT_ID,
+            })
+        except json.JSONDecodeError as e:
+            print(f"Ошибка парсинга FIREBASE_CREDENTIALS_JSON: {e}")
+            raise
+    elif os.path.exists(FIREBASE_CREDENTIALS_PATH):
+        # Читаем credentials из файла (для локальной разработки)
         cred = credentials.Certificate(FIREBASE_CREDENTIALS_PATH)
         firebase_admin.initialize_app(cred, {
             'projectId': FIREBASE_PROJECT_ID,
         })
     else:
         # Для разработки можно использовать Application Default Credentials
+        print("⚠️ Firebase credentials не найдены. Используются Application Default Credentials.")
         firebase_admin.initialize_app()
 
 db = firestore.client()
