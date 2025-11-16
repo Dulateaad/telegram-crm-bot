@@ -5,8 +5,11 @@ import logging
 import sys
 import os
 
-# Добавляем корневую директорию в путь для импортов
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# Добавляем корневую директорию проекта в путь для импортов
+# Определяем корневую директорию проекта (на уровень выше src/)
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 from src.bot import start_bot
 

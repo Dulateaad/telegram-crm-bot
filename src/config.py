@@ -7,7 +7,7 @@ load_dotenv()
 # Telegram
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 if not TELEGRAM_BOT_TOKEN:
-    raise ValueError('TELEGRAM_BOT_TOKEN не установлен в .env')
+    raise ValueError('TELEGRAM_BOT_TOKEN не установлен. Установите переменную окружения TELEGRAM_BOT_TOKEN в Render Dashboard → Environment Variables')
 
 # Firebase
 FIREBASE_PROJECT_ID = os.getenv('FIREBASE_PROJECT_ID', 'studio-3898272712-a12a4')
