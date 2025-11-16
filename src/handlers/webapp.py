@@ -1,7 +1,6 @@
 """Обработчики данных из Web App"""
 from aiogram import Router, F
 from aiogram.types import Message, WebAppData
-from aiogram.filters import ContentTypesFilter
 import json
 from src.services.orders import OrderService
 from src.services.notifications import NotificationService
@@ -13,8 +12,8 @@ from datetime import datetime
 router = Router()
 
 
-@router.message(ContentTypesFilter(content_types=['web_app_data']))
-async def handle_webapp_data(message: Message, db_user: dict = None, user_role: str = None, bot=None):
+@router.message(F.content_type == 'web_app_data')
+async def handle_webapp_data(message: Message, db_user: dict = None, user_role: str = None):
     """Обработка данных из Web App"""
     if not db_user:
         await message.answer("❌ Вы не авторизованы")
@@ -25,6 +24,11 @@ async def handle_webapp_data(message: Message, db_user: dict = None, user_role: 
         return
     
     try:
+        # Проверяем наличие web_app_data
+        if not hasattr(message, 'web_app_data') or not message.web_app_data:
+            await message.answer("❌ Ошибка: данные Web App не найдены")
+            return
+        
         # Парсим данные из Web App
         data = json.loads(message.web_app_data.data)
         
